@@ -12,6 +12,9 @@ class HeaderMenu extends HTMLElement {
     this.menuButton.addEventListener('mouseover', this.showDropdown.bind(this));
     this.dropdownContent.addEventListener('mouseover', this.showDropdown.bind(this));
 
+    this.menuButton.addEventListener('mouseleave', this.hideDropdown.bind(this));
+    this.dropdownContent.addEventListener('mouseleave', this.hideDropdown.bind(this));
+
     this.childLinks.forEach(childLink => {
       childLink.addEventListener('mouseover', this.showGrandchildren.bind(this));
     });
@@ -26,8 +29,6 @@ class HeaderMenu extends HTMLElement {
 
     this.menuButton.setAttribute('aria-expanded', 'true');
     this.dropdownContent.hidden = false;
-
-    this.showDefaultGrandchildMenu();
 
     // Optional: Add animation or CSS class for transition
     if (!this.animations) this.animations = this.dropdownContent.getAnimations();
@@ -44,19 +45,6 @@ class HeaderMenu extends HTMLElement {
     }
   }
 
-  showDefaultGrandchildMenu() {
-    // TODO: fix this
-    return;
-    this.grandchildMenus.forEach(menu => {
-      menu.hidden = true;
-    });
-
-    const defaultGrandchildMenu = this.dropdownContent.querySelector('.header__submenu-grandchildren[data-default="true"]');
-    if (defaultGrandchildMenu) {
-      defaultGrandchildMenu.hidden = false;
-    }
-  }
-
   showGrandchildren(event) {
     console.log("Show grandchild");
     const childLink = event.currentTarget;
@@ -65,9 +53,12 @@ class HeaderMenu extends HTMLElement {
 
     this.grandchildMenus.forEach(menu => {
       menu.hidden = true;
+      menu.classList.remove('show');
     });
 
     grandchildMenu.hidden = false;
+    void grandchildMenu.offsetWidth; /* Forcing reflow to make sure animation triggers */
+    grandchildMenu.classList.add('show');
   }
 }
 

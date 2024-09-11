@@ -65,11 +65,20 @@ Hack for images
                   <!-- Second Column: Pre-rendered Grandchild Lists -->
                   <div class="header__grandchild-column">
                     {%- for childlink in link.links -%}
-                      {%- if childlink.links != blank -%}
-                        <ul id="HeaderMenu-SubMenuList-{{ link.handle }}-{{ childlink.handle }}" class="header__submenu-grandchildren list-menu" {% if forloop.first %}data-default="true"{% endif %} hidden>
-                          <div class="header__grandchild-image-wrapper">
-                            <img src="#" width="50px" height="50px">
-                          </div>
+                      <ul
+                        id="HeaderMenu-SubMenuList-{{ link.handle }}-{{ childlink.handle }}"
+                        class="header__submenu-grandchildren list-menu {%  if forloop.first %}show{%  endif %}"
+                        {% if forloop.first %}data-default="true"{% endif %}
+                        {% unless forloop.first %}hidden{% endunless %}
+                      >
+                        
+                        <!-- Image Wrapper (always show) -->
+                        <div class="header__grandchild-image-wrapper">
+                          <img src="#" width="50px" height="50px">
+                        </div>
+
+                        {%- if childlink.links != blank -%}
+                          <!-- Grandchild Links -->
                           {%- for grandchildlink in childlink.links -%}
                             <li>
                               <a
@@ -81,8 +90,17 @@ Hack for images
                               </a>
                             </li>
                           {%- endfor -%}
-                        </ul>
-                      {%- endif -%}
+                        {%- endif -%}
+
+                        <!-- View All Button (always shown) -->
+                        <li class="header__view-all-link">
+                          <a href="{{ childlink.url }}" class="header__menu-item list-menu__item link link--text focus-inset caption-large">
+                            <span>View all</span>
+                            {{- 'icon-caret.svg' | inline_asset_content -}}
+                          </a>
+                        </li>
+                        
+                      </ul>
                     {%- endfor -%}
                   </div>
 
