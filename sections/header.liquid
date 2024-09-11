@@ -160,7 +160,7 @@
       {%- endif -%}
     {%- endif -%}
 
-    {%- liquid
+    {% comment %} {%- liquid
       if section.settings.menu != blank
         if section.settings.menu_type_desktop == 'dropdown'
           render 'header-dropdown-menu'
@@ -168,7 +168,7 @@
           render 'header-mega-menu'
         endif
       endif
-    %}
+    %} {% endcomment %}
 
     {%- if section.settings.logo_position == 'middle-center' -%}
       {%- if request.page_type == 'index' -%}
@@ -276,6 +276,16 @@
       </a>
     </div>
   </header>
+
+  {%- liquid
+    if section.settings.menu != blank
+      if section.settings.menu_type_desktop == 'dropdown'
+        render 'header-dropdown-menu'
+      elsif section.settings.menu_type_desktop != 'drawer'
+        render 'header-mega-menu'
+      endif
+    endif
+  %}
 </{% if section.settings.sticky_header_type != 'none' %}sticky-header{% else %}div{% endif %}>
 
 {%- if settings.cart_type == "notification" -%}
@@ -382,7 +392,14 @@
 
     closeMenuDisclosure() {
       this.disclosures = this.disclosures || this.header.querySelectorAll('header-menu');
-      this.disclosures.forEach(disclosure => disclosure.close());
+      // TODO: you need to fix this
+      
+      // this.disclosures.forEach(disclosure => disclosure.close());
+      this.disclosures.forEach((disclosure) => {
+        if (disclosure && typeof disclosure.close === 'function') {
+          disclosure.close();
+        }
+      });
     }
 
     closeSearchModal() {
