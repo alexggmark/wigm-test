@@ -29,20 +29,11 @@ class HeaderMenu extends HTMLElement {
 
     this.menuButton.setAttribute('aria-expanded', 'true');
     this.dropdownContent.hidden = false;
-
-    // Optional: Add animation or CSS class for transition
-    if (!this.animations) this.animations = this.dropdownContent.getAnimations();
-    this.animations.forEach(animation => animation.play());
   }
 
   hideDropdown() {
     this.menuButton.setAttribute('aria-expanded', 'false');
     this.dropdownContent.hidden = true;
-
-    // Optional: Cancel the animations
-    if (this.animations) {
-      this.animations.forEach(animation => animation.cancel());
-    }
   }
 
   showGrandchildren(event) {
@@ -57,7 +48,7 @@ class HeaderMenu extends HTMLElement {
     });
 
     grandchildMenu.hidden = false;
-    void grandchildMenu.offsetWidth; /* Forcing reflow to make sure animation triggers */
+    void grandchildMenu.offsetWidth; /* Weird fix, forcing reflow to make sure animation triggers */
     grandchildMenu.classList.add('show');
   }
 }

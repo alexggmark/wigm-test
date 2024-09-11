@@ -9,18 +9,31 @@
   class="header__active-menu-item"
 {% endif %} {% endcomment %}
 
-{% comment %} <ul class="header__submenu-column header__submenu-grandchildren list-menu list-menu--disclosure" role="list"> {% endcomment %}
-
-{% comment %} 
-Hack for images
+{% comment %} This is a simple hack in place of product/category images - and without using metafields to associate images with menu items {% endcomment %}
 {% assign images = "" %}
 {% for i in (1..6) %}
-  {% assign image_url = 'image-' | append: i | append: '.jpg' | asset_url %}
+  {% case i %}
+    {% when 1 %}
+      {% assign image_url = 'menuitem-1.png' %}
+    {% when 2 %}
+      {% assign image_url = 'menuitem-2.png' %}
+    {% when 3 %}
+      {% assign image_url = 'menuitem-3.svg' %}
+    {% when 4 %}
+      {% assign image_url = 'menuitem-4.svg' %}
+    {% when 5 %}
+      {% assign image_url = 'menuitem-5.png' %}
+    {% when 6 %}
+      {% assign image_url = 'menuitem-6.png' %}
+  {% endcase %}
+  
   {% assign images = images | append: image_url %}
   {% if forloop.last == false %}
     {% assign images = images | append: ',' %}
   {% endif %}
-{% endfor %} {% endcomment %}
+{% endfor %}
+
+{% assign images_array = images | split: ',' %}
 
 <nav class="header__inline-menu">
   <ul class="list-menu list-menu--inline" role="list">
@@ -29,7 +42,6 @@ Hack for images
         {%- if link.links != blank -%}
           <header-menu>
             <div class="header__menu-item-wrapper">
-              <!-- Dropdown button for main menu item -->
               <button
                 id="HeaderMenu-{{ link.handle }}"
                 class="header__main-menu-item list-menu__item link focus-inset"
@@ -41,11 +53,9 @@ Hack for images
                 {{- 'icon-caret.svg' | inline_asset_content -}}
               </button>
 
-              <!-- Dropdown menu for main menu item -->
               <div id="HeaderMenu-MenuList-{{ forloop.index }}" class="header__dropdown-area" hidden>
-                <div class="header__submenu-wrapper"> <!-- Two-column wrapper -->
+                <div class="header__submenu-wrapper">
 
-                  <!-- First Column: Child Links -->
                   <ul class="header__submenu-column header__submenu list-menu" role="list">
                     {%- for childlink in link.links -%}
                       <li>
@@ -62,7 +72,6 @@ Hack for images
                     {%- endfor -%}
                   </ul>
 
-                  <!-- Second Column: Pre-rendered Grandchild Lists -->
                   <div class="header__grandchild-column">
                     {%- for childlink in link.links -%}
                       <ul
@@ -72,13 +81,11 @@ Hack for images
                         {% unless forloop.first %}hidden{% endunless %}
                       >
                         
-                        <!-- Image Wrapper (always show) -->
                         <div class="header__grandchild-image-wrapper">
-                          <img src="#" width="50px" height="50px">
+                          <img src="{{ images_array[forloop.index0] | asset_url }}" width="auto" height="140px" alt="Menu item image">
                         </div>
 
                         {%- if childlink.links != blank -%}
-                          <!-- Grandchild Links -->
                           {%- for grandchildlink in childlink.links -%}
                             <li>
                               <a
@@ -92,7 +99,6 @@ Hack for images
                           {%- endfor -%}
                         {%- endif -%}
 
-                        <!-- View All Button (always shown) -->
                         <li class="header__view-all-link">
                           <a href="{{ childlink.url }}" class="header__menu-item list-menu__item link link--text focus-inset caption-large">
                             <span>View all</span>
@@ -108,83 +114,6 @@ Hack for images
               </div>
             </div>
           </header-menu>
-
-          {% comment %} <header-menu>
-            <div class="header__menu-item-wrapper">
-              <!-- Dropdown button for main menu item -->
-              <button
-                id="HeaderMenu-{{ link.handle }}"
-                class="
-                  header__main-menu-item
-                  list-menu__item
-                  link
-                  focus-inset
-                "
-                aria-expanded="false"
-                aria-haspopup="true"
-                aria-controls="HeaderMenu-MenuList-{{ forloop.index }}"
-              >
-                <span>
-                  {{- link.title | escape -}}
-                </span>
-                {{- 'icon-caret.svg' | inline_asset_content -}}
-              </button>
-
-              <!-- Dropdown menu for main menu item -->
-              <div id="HeaderMenu-MenuList-{{ forloop.index }}" class="header__dropdown-area" hidden>
-                <ul class="header__submenu list-menu list-menu--disclosure color-{{ section.settings.menu_color_scheme }} gradient caption-large motion-reduce global-settings-popup" role="list">
-                  {%- for childlink in link.links -%}
-                    <li>
-                      {%- if childlink.links == blank -%}
-                        <a
-                          id="HeaderMenu-{{ link.handle }}-{{ childlink.handle }}"
-                          href="{{ childlink.url }}"
-                          class="header__menu-item list-menu__item link link--text focus-inset caption-large{% if childlink.current %} list-menu__item--active{% endif %}"
-                          {% if childlink.current %}
-                            aria-current="page"
-                          {% endif %}
-                        >
-                          {{ childlink.title | escape }}
-                        </a>
-                      {%- else -%}
-                        <!-- Submenu button for subcategory -->
-                        <button
-                          id="HeaderMenu-{{ link.handle }}-{{ childlink.handle }}"
-                          class="header__menu-item link link--text list-menu__item focus-inset caption-large"
-                          aria-expanded="false"
-                          aria-haspopup="true"
-                          aria-controls="HeaderMenu-SubMenuList-{{ link.handle }}-{{ childlink.handle }}"
-                        >
-                          <span>{{ childlink.title | escape }}</span>
-                          {{- 'icon-caret.svg' | inline_asset_content -}}
-                        </button>
-
-                        <!-- Dropdown for the subcategory -->
-                        <div id="HeaderMenu-SubMenuList-{{ link.handle }}-{{ childlink.handle }}" hidden>
-                          <ul class="header__submenu list-menu motion-reduce">
-                            {%- for grandchildlink in childlink.links -%}
-                              <li>
-                                <a
-                                  id="HeaderMenu-{{ link.handle }}-{{ childlink.handle }}-{{ grandchildlink.handle }}"
-                                  href="{{ grandchildlink.url }}"
-                                  class="header__menu-item list-menu__item link link--text focus-inset caption-large{% if grandchildlink.current %} list-menu__item--active{% endif %}"
-                                  {% if grandchildlink.current %}
-                                    aria-current="page"
-                                  {% endif %}
-                                >
-                                  {{ grandchildlink.title | escape }}
-                                </a>
-                              </li>
-                            {%- endfor -%}
-                          </ul>
-                        </div>
-                      {%- endif -%}
-                    </li>
-                  {%- endfor -%}
-                </ul>
-              </div>
-            </div>
-          </header-menu> {% endcomment %}
         {%- else -%}
           <a
             id="HeaderMenu-{{ link.handle }}"

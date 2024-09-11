@@ -2572,6 +2572,24 @@ button[aria-expanded="true"] + .header__dropdown-area {
   transition: background-color var(--duration-short) ease;
 }
 
+.header__view-all-link:hover {
+  background-color: white;
+}
+
+.header__grandchild-image-wrapper {
+  padding: 1em 0 0 1em;
+}
+
+/* Very dirty hack - this should be handled with metafields or link.handle */
+#HeaderMenu-offers {
+  background-color: #e49949;
+  /* background: linear-gradient(180deg, #e49949, #e5a867); */
+}
+#HeaderMenu-offers:hover {
+  color: rgba(var(--color-background), 1);
+  background-color: #2c8993;
+}
+
 /* Header icons */
 .header__icons {
   display: flex;
@@ -2878,7 +2896,7 @@ details[open] > .header__submenu {
 }
 
 .header__main-menu-item:hover {
-  /* color: rgb(var(--color-foreground)); */
+  color: rgba(var(--color-background), 1);
   background-color: #2c8993;
 }
 
@@ -2886,11 +2904,14 @@ details[open] > .header__submenu {
   padding: 1.2rem;
   text-decoration: none;
   color: rgba(var(--color-foreground), 0.75);
+  /* transition: color var(--duration-short) ease, margin-left var(--duration-short) ease; */
   transition: color var(--duration-short) ease;
 }
 
 .header__menu-item:hover {
   color: #369faa;
+  /* margin-left: 0.4em; */
+  /* text-decoration: underline; */
 }
 
 .header__menu-item span {
@@ -2902,7 +2923,7 @@ details[open] > .header__submenu {
   text-underline-offset: 0.3rem;
 } */
 
-details[open] > .header__menu-item {
+/* details[open] > .header__menu-item {
   text-decoration: underline;
 }
 
@@ -2912,7 +2933,7 @@ details[open]:hover > .header__menu-item {
 
 details[open] > .header__menu-item .icon-caret {
   transform: rotate(180deg);
-}
+} */
 
 .header__active-menu-item {
   transition: text-decoration-thickness var(--duration-short) ease;
